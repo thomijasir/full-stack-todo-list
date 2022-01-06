@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render Register Page 1`] = `
+<div>
+  <h1>
+    Its Register Screen
+  </h1>
+</div>
+`;

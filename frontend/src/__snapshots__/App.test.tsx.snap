@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render Login Page 1`] = `
+<div>
+  <h1>
+    Its Login Screen
+  </h1>
+</div>
+`;

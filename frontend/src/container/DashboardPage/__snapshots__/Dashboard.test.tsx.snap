@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render Dashboard Page 1`] = `
+<div>
+  <h1>
+    Its Dashboard Screen
+  </h1>
+</div>
+`;
