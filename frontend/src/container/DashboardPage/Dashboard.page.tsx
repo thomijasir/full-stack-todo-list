@@ -1,8 +1,65 @@
-import React, { useState } from 'react';
+import { useState, useEffect, useMemo, FormEvent } from 'react';
+import TabContent from '../../components/TabContent/TabContent.comp';
+import TodoForm from '../../components/TodoForm/TodoForm.comp';
+import TodoList from '../../components/TodoList/TodoList.comp';
+import { ITodoList, ITabContentList } from '../../interfaces/General';
 import './Dashboard.style.scss';
 
 const Dashboard = () => {
-  const [tabContent, setTabContent] = useState([{ id: 0, title: 'Home', active: true, content: null }]);
+  const [todoList, setTodoList] = useState<ITodoList[]>([
+    { id: 0, title: 'Pergi Belanja', done: true },
+    { id: 1, title: 'Makan Nasi', done: false },
+    { id: 2, title: 'Cuci Piring', done: false }
+  ]);
+  const [tabContent, setTabContent] = useState<ITabContentList[]>([]);
+  const todoListCompeted = useMemo(() => todoList.filter((item) => item.done === true), [todoList]);
+  const todoListActive = useMemo(() => todoList.filter((item) => item.done === false), [todoList]);
+
+  useEffect(() => {
+    setTabContent([
+      { id: 0, title: 'ALL', active: true, content: <TodoList todoContent={todoList} completed={handleTodoCompleted} remove={handleTodoRemove} /> },
+      { id: 1, title: 'ACTIVE', active: false, content: <TodoList todoContent={todoListActive} completed={handleTodoCompleted} remove={handleTodoRemove} /> },
+      { id: 2, title: 'COMPLETED', active: false, content: <TodoList todoContent={todoListCompeted} completed={handleTodoCompleted} remove={handleTodoRemove} /> }
+    ]);
+  }, [todoList]);
+
+  const handleTodoCompleted = (id: number) => () => {
+    const selectedTodo = todoList.map((item) => {
+      return {
+        ...item,
+        done: item.id === id ? true : item.done
+      };
+    });
+    setTodoList(selectedTodo);
+  };
+
+  const handleTodoRemove = (id: number) => () => {
+    const removeTodo = todoList.filter((item) => item.id !== id);
+    setTodoList(removeTodo);
+  };
+
+  const handleChangeTab = (id: number) => () => {
+    const updateTabs = tabContent.map((item) => {
+      return {
+        ...item,
+        active: item.id === id
+      };
+    });
+    setTabContent(updateTabs);
+  };
+
+  const handleAddNewTodo = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const getInput = e.currentTarget.querySelector('input')?.value || '';
+    const newTodo = [...todoList];
+    newTodo.push({
+      id: Math.floor(Math.random() * 10000),
+      title: getInput,
+      done: false
+    });
+    setTodoList(newTodo);
+    e.currentTarget.reset();
+  };
 
   return (
     <div className="dashboard-page">
@@ -10,64 +67,8 @@ const Dashboard = () => {
         <h1 className="h3 mb-3 fw-normal">Todo List</h1>
         <p>Hello, thomijasir@gmail.com</p>
         <p>Todo list application will help you remind what todo you need have to done.</p>
-        <div className="tab-component">
-          <ul className="nav nav-tabs">
-            <li className="nav-item">
-              <a className="nav-link active" href="#home">
-                ALL TASK
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#profile">
-                ACTIVE
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#contact">
-                COMPLETED
-              </a>
-            </li>
-          </ul>
-          <div className="tab-content">
-            <div className="tab-pane fade show active">
-              <div className="todo-content mb-5 mt-4">
-                <div className="todo-item">
-                  <div className="todo-box">
-                    <input type="checkbox"></input>
-                  </div>
-                  <div className="todo-text">Todo Active</div>
-                </div>
-                <div className="todo-item done">
-                  <div className="todo-box">
-                    <input type="checkbox"></input>
-                  </div>
-                  <div className="todo-text">Todo Done</div>
-                  <div className="todo-remove">
-                    <i className="bi bi-x-square-fill"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="tab-pane fade">Yolo</div>
-            <div className="tab-pane fade">Homerun</div>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-md-9">
-            <div className="form-group">
-              <input type="email" className="form-control" placeholder="Add a Task" />
-              <small id="emailHelp" className="form-text text-muted">
-                We'll never share your task with anyone else.
-              </small>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <button className="w-100 btn btn-primary disabled" type="submit">
-              Add <span className="spinner-border spinner-border-sm"></span>
-            </button>
-          </div>
-        </div>
+        <TabContent contentList={tabContent} handleChangeTab={handleChangeTab} />
+        <TodoForm submitted={handleAddNewTodo} />
       </main>
     </div>
   );
