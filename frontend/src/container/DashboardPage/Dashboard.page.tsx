@@ -6,11 +6,7 @@ import { ITodoList, ITabContentList } from '../../interfaces/General';
 import './Dashboard.style.scss';
 
 const Dashboard = () => {
-  const [todoList, setTodoList] = useState<ITodoList[]>([
-    { id: 0, title: 'Pergi Belanja', done: true },
-    { id: 1, title: 'Makan Nasi', done: false },
-    { id: 2, title: 'Cuci Piring', done: false }
-  ]);
+  const [todoList, setTodoList] = useState<ITodoList[]>([]);
   const [tabContent, setTabContent] = useState<ITabContentList[]>([]);
   const todoListCompeted = useMemo(() => todoList.filter((item) => item.done === true), [todoList]);
   const todoListActive = useMemo(() => todoList.filter((item) => item.done === false), [todoList]);

@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { ITodoList } from '../../interfaces/General';
 import './TodoList.style.scss';
+import TODO_EMPTY from '../../assets/image/todo_empty.png';
 
 interface IProps {
   todoContent: ITodoList[];
@@ -22,6 +23,18 @@ const TodoList: FC<IProps> = ({ todoContent, completed, remove }) => {
           </div>
         </div>
       ))}
+      {todoContent.length <= 0 ? (
+        <div className="todo-empty">
+          <div className="image-control">
+            <img src={TODO_EMPTY} alt="todo-empty" />
+          </div>
+          <div className="note">
+            <p>You dont have any task..</p>
+          </div>
+        </div>
+      ) : (
+        ''
+      )}
     </div>
   );
 };
