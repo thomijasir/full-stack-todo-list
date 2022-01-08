@@ -1,5 +1,5 @@
 export interface ITodoList {
-  id: number;
+  id: string;
   title: string;
   done: boolean;
 }

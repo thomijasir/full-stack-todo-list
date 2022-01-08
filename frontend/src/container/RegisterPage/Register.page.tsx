@@ -1,28 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useApi from '../../hooks/useApi';
 import TodoLogo from '../../assets/image/logo.svg';
 import './Register.style.scss';
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const makeRegister = useApi('POST', 'user/register', { isLoading: false }, false);
+  const makeRegister = useApi('POST', 'user/register');
+  const [statusRegister, setStatusRegister] = useState(0);
+  const handleSuccessRegister = () => {
+    setStatusRegister(200);
+    setTimeout(() => {
+      navigate('/');
+    }, 1500);
+  };
+  const handleFailureRegister = () => {
+    console.log('TODO: SHOW ERROR MESSAGE');
+  };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const username = e.currentTarget.getElementsByTagName('input')[0].value;
     const email = e.currentTarget.getElementsByTagName('input')[1].value;
     const password = e.currentTarget.getElementsByTagName('input')[2].value;
-    makeRegister.onFetch({
-      username,
-      email,
-      password
-    });
+    makeRegister
+      .onFetch({
+        username,
+        email,
+        password
+      })
+      ?.then(handleSuccessRegister)
+      .catch(handleFailureRegister);
   };
 
-  if (makeRegister.response.responses) {
-    setTimeout(() => {
-      navigate('/');
-    }, 1500);
-  }
   return (
     <div className="register-page text-center">
       <main className="form-register">
@@ -35,7 +43,12 @@ const RegisterPage = () => {
             <label htmlFor="floatingInput">Username</label>
           </div>
           <div className="form-floating">
-            <input type="email" className="form-email form-control" id="floatingInput" placeholder="name@example.com" />
+            <input
+              type="email"
+              className="form-email form-control"
+              id="floatingInput"
+              placeholder="name@example.com"
+            />
             <label htmlFor="floatingInput">Email address</label>
           </div>
           <div className="form-floating mb-3">
@@ -43,7 +56,7 @@ const RegisterPage = () => {
             <label htmlFor="floatingPassword">Password</label>
           </div>
 
-          {makeRegister.response.responses ? (
+          {statusRegister === 200 ? (
             <div className="mb-3 alert alert-success" role="alert">
               New user is created...
             </div>
@@ -53,8 +66,21 @@ const RegisterPage = () => {
 
           <div className="row">
             <div className="col-md-12">
-              <button className="w-100 btn btn-primary" disabled={makeRegister.response.isLoading} type="submit">
-                Sign in {makeRegister.response.isLoading ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : ''}
+              <button
+                className="w-100 btn btn-primary"
+                disabled={makeRegister.loading}
+                type="submit"
+              >
+                Sign in{' '}
+                {makeRegister.loading ? (
+                  <span
+                    className="spinner-border spinner-border-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                ) : (
+                  ''
+                )}
               </button>
             </div>
           </div>

@@ -1,65 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useStorage from './useStorage';
 import ApiService from '../services/ApiService';
-import { ACCESS_TOKEN } from '../constants';
-
-export interface IAPIResponses {
-  isLoading: boolean;
-  responses?: any;
-  error?: any;
-}
+import { ACCESS_TOKEN, ME } from '../constants';
 
 const { todoService, setBearer } = ApiService.getInstance();
 
-const useApi = (type: string, uri: string, defaultResponses: IAPIResponses, first?: boolean) => {
-  const [response, setResponse] = useState<IAPIResponses>(defaultResponses);
-  const [token, setToken] = useStorage(ACCESS_TOKEN, '');
-  const setSuccess = (res: any) => {
-    setResponse({
-      isLoading: false,
-      responses: res.data
-    });
-  };
+const useApi = (type: string, uri: string) => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [token] = useStorage(ACCESS_TOKEN, '');
 
-  const setFailure = (error: any) => {
-    setResponse({
-      isLoading: false,
-      error
-    });
-  };
-
-  const setAuth = (res: any) => {
-    const { token } = res.data;
-    setToken(token);
+  useEffect(() => {
     setBearer(token);
-    setResponse({
-      isLoading: false,
-      responses: res.data
-    });
-  };
+  }, []);
 
-  const onFetch = (params?: any) => {
-    setResponse({ isLoading: true });
+  const onFetch = (params?: any, segment?: string) => {
+    setLoading(true);
     switch (type) {
       case 'GET':
-        todoService.get(uri).then(setSuccess).catch(setFailure);
-        break;
+        return todoService.get(uri);
       case 'POST':
-        todoService.post(uri, params).then(setSuccess).catch(setFailure);
-        break;
+        return todoService.post(uri, params);
       case 'PATCH':
-        todoService.patch(uri).then(setSuccess).catch(setFailure);
-        break;
+        return todoService.patch(`${uri}/${segment}`, params);
       case 'DELETE':
-        todoService.delete(uri).then(setSuccess).catch(setFailure);
-        break;
-      case 'AUTH':
-        todoService.post(uri, params).then(setAuth).catch(setFailure);
-        break;
+        return todoService.delete(`${uri}/${segment}`);
     }
   };
 
-  return { response, onFetch };
+  return { loading, onFetch, setLoading, setBearer };
 };
 
 export default useApi;

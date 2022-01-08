@@ -39,10 +39,7 @@ const createTodo = (req: Request, res: Response, next: NextFunction) => {
     .then((todo) => {
       return res.status(201).json({
         message: 'Success created todo',
-        data: {
-          title,
-          done: false
-        }
+        todo
       });
     })
     .catch((err) => {
@@ -56,7 +53,7 @@ const createTodo = (req: Request, res: Response, next: NextFunction) => {
 const updateTodo = (req: Request, res: Response, next: NextFunction) => {
   const _id = req.params.id;
   const { title, done } = req.body;
-  TodoModel.update({ _id }, { $set: { title, done } })
+  TodoModel.update({ _id }, { $set: { done } })
     .exec()
     .then(() => {
       return res.status(200).json({
