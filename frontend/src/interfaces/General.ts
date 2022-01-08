@@ -10,3 +10,18 @@ export interface ITabContentList {
   active: boolean;
   content: JSX.Element | null;
 }
+
+export interface IAuth {
+  message: string;
+  token: string;
+  user: string;
+}
+
+export interface IResponsesAuth {
+  config: object;
+  data: IAuth;
+  header: object;
+  request: object;
+  status: number;
+  statusText: string;
+}

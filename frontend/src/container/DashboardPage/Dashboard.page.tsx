@@ -19,7 +19,7 @@ const Dashboard = () => {
   const todoListCompeted = useMemo(() => todoList.filter((item) => item.done === true), [todoList]);
   const todoListActive = useMemo(() => todoList.filter((item) => item.done === false), [todoList]);
 
-  useEffect(() => {
+  const initTodo = () => {
     loadsTodo
       .onFetch()
       ?.then((res) => {
@@ -33,7 +33,8 @@ const Dashboard = () => {
       .catch(() => {
         setTodoList([]);
       });
-  }, []);
+  };
+  useEffect(initTodo, []);
 
   useEffect(() => {
     setTabContent([
@@ -111,7 +112,7 @@ const Dashboard = () => {
     createTodo.onFetch({ title })?.then((res) => {
       const newTodo = [...todoList];
       newTodo.push({
-        id: res.data._id,
+        id: res.data.todo._id,
         title,
         done: false
       });

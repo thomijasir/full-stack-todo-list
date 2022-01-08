@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import useStorage from './useStorage';
 import ApiService from '../services/ApiService';
-import { ACCESS_TOKEN, ME } from '../constants';
+import { ACCESS_TOKEN } from '../constants';
 
 const { todoService, setBearer } = ApiService.getInstance();
 

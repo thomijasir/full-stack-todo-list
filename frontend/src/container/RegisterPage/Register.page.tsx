@@ -14,7 +14,7 @@ const RegisterPage = () => {
     }, 1500);
   };
   const handleFailureRegister = () => {
-    console.log('TODO: SHOW ERROR MESSAGE');
+    setStatusRegister(500);
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

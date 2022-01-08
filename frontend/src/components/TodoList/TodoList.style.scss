@@ -9,6 +9,8 @@
     color: #e1e1e1;
     margin-bottom: 8px;
     border-radius: 4px;
+    transition: 0.5 ease;
+    opacity: 1;
     &.done {
       opacity: 0.7;
       .todo-text {

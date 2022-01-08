@@ -1,12 +1,14 @@
 import React, { useState, MouseEvent, FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavigateFunction } from 'react-router-dom';
 import useApi from '../../hooks/useApi';
 import useStorage from '../../hooks/useStorage';
 import { ACCESS_TOKEN, ME } from '../../constants';
+import { IResponsesAuth } from '../../interfaces/General';
+import { AxiosResponse } from 'axios';
 import TodoLogo from '../../assets/image/logo.svg';
 import './Login.style.scss';
 
-export const handleRegister = (navigate: any) => (e: MouseEvent) => {
+export const handleRegister = (navigate: NavigateFunction) => (e: MouseEvent) => {
   e.preventDefault();
   navigate('/register');
 };
@@ -25,7 +27,8 @@ const LoginPage = () => {
     makeLogin.setBearer(token);
   };
 
-  const handleSuccessLogin = (res: any) => {
+  const handleSuccessLogin = (res: AxiosResponse<IResponsesAuth>) => {
+    console.log('SUCCESS LOGIN: ', res);
     setStatusLogin(200);
     setUserAuth(res);
     setTimeout(() => {
@@ -33,7 +36,7 @@ const LoginPage = () => {
       window.location.assign('/dashboard');
     }, 1000);
   };
-  const handleFailureLogin = (res: any) => {
+  const handleFailureLogin = (res: AxiosResponse<any, any>) => {
     setStatusLogin(401);
     makeLogin.setLoading(false);
   };
