@@ -17,7 +17,7 @@ router.post('/auth/login', authController.login);
 
 // User Router
 router.get('/user/me', userController.me);
-router.get('ping', userController.ping);
+router.get('/ping', userController.ping);
 router.post('/user/register', userController.register);
 
 export = router;
