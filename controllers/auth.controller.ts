@@ -28,22 +28,27 @@ const login = (req: Request, res: Response, next: NextFunction) => {
         if (error) {
           LOG.error(NAMESPACE, error.message, error);
           return res.status(401).json({
-            message: 'Unauthorize'
+            message: 'Password Mismatch'
+          });
+        } else if (result) {
+          sign(users[0], (_error, token) => {
+            if (_error) {
+              LOG.error(NAMESPACE, _error.message, _error);
+              return res.status(401).json({
+                message: 'Unauthorize'
+              });
+            }
+            return res.status(200).json({
+              message: 'Auth Success',
+              token,
+              user: users[0].username
+            });
+          });
+        } else {
+          return res.status(401).json({
+            message: 'Unauthorized'
           });
         }
-        sign(users[0], (_error, token) => {
-          if (_error) {
-            LOG.error(NAMESPACE, _error.message, _error);
-            return res.status(401).json({
-              message: 'Unauthorize'
-            });
-          }
-          return res.status(200).json({
-            message: 'Auth Success',
-            token,
-            user: users[0].username
-          });
-        });
       });
     })
     .catch((error) => {
