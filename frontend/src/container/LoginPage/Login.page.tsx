@@ -33,7 +33,7 @@ const LoginPage = () => {
     setUserAuth(res);
     setTimeout(() => {
       makeLogin.setLoading(false);
-      window.location.assign('/dashboard');
+      navigate('/dashboard');
     }, 1000);
   };
   const handleFailureLogin = (res: AxiosResponse<any, any>) => {

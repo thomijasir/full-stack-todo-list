@@ -5,9 +5,9 @@ const getSavedValue = (key: string, initialValue: any) => {
   if (storageValue) {
     return JSON.parse(storageValue);
   }
-  if (initialValue instanceof Function) {
-    return initialValue();
-  }
+  // if (initialValue instanceof Function) {
+  //   return initialValue();
+  // }
   return initialValue;
 };
 
